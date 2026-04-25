@@ -1,0 +1,113 @@
+{
+  "entities": {
+    "Business": {
+      "title": "Business",
+      "description": "A tenant/company in the system",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "ownerId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "ownerId", "createdAt"]
+    },
+    "User": {
+      "title": "User",
+      "description": "A user profile with role-based access",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "role": { "type": "string", "enum": ["ADMIN", "OWNER", "EMPLOYEE", "CUSTOMER"] },
+        "businessId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "role", "createdAt"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "An inventory item or finished product",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "sku": { "type": "string" },
+        "price": { "type": "number" },
+        "stockLevel": { "type": "integer" },
+        "category": { "type": "string" },
+        "businessId": { "type": "string" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "price", "stockLevel", "businessId"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "A purchase order from a customer",
+      "type": "object",
+      "properties": {
+        "customerId": { "type": "string" },
+        "items": { "type": "array" },
+        "totalAmount": { "type": "number" },
+        "status": { "type": "string", "enum": ["PENDING", "PROCESSING", "SHIPPED", "DELIVERED", "CANCELLED"] },
+        "businessId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["customerId", "items", "totalAmount", "status", "businessId", "createdAt"]
+    },
+    "Transaction": {
+      "title": "Transaction",
+      "description": "A financial record (income or expense)",
+      "type": "object",
+      "properties": {
+        "type": { "type": "string", "enum": ["INCOME", "EXPENSE"] },
+        "amount": { "type": "number" },
+        "category": { "type": "string" },
+        "description": { "type": "string" },
+        "date": { "type": "string", "format": "date-time" },
+        "businessId": { "type": "string" }
+      },
+      "required": ["type", "amount", "date", "businessId"]
+    },
+    "ProductionBatch": {
+      "title": "Production Batch",
+      "description": "A record of goods being manufactured",
+      "type": "object",
+      "properties": {
+        "productId": { "type": "string" },
+        "quantity": { "type": "integer" },
+        "rawMaterials": { "type": "array" },
+        "status": { "type": "string", "enum": ["PLANNED", "IN_PROGRESS", "COMPLETED"] },
+        "businessId": { "type": "string" },
+        "startDate": { "type": "string", "format": "date-time" },
+        "endDate": { "type": "string", "format": "date-time" }
+      },
+      "required": ["productId", "quantity", "status", "businessId", "startDate"]
+    }
+  },
+  "firestore": {
+    "businesses": {
+      "schema": "Business",
+      "description": "Top-level collection of businesses"
+    },
+    "users": {
+      "schema": "User",
+      "description": "Top-level collection of users"
+    },
+    "products": {
+      "schema": "Product",
+      "description": "Collection of products global (though partitioned by businessId)"
+    },
+    "orders": {
+      "schema": "Order",
+      "description": "Collection of orders"
+    },
+    "transactions": {
+      "schema": "Transaction",
+      "description": "Collection of financial transactions"
+    },
+    "production_batches": {
+      "schema": "ProductionBatch",
+      "description": "Collection of production logs"
+    }
+  }
+}
